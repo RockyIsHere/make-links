@@ -20,13 +20,10 @@ class UserController extends GetxController {
         .toList();
     users.clear();
     users.addAll(usersList);
-    print('rocky');
-    print(users[0]);
   }
 
   @override
   void onInit() async {
-    // TODO: implement onInit
     await getUsers();
     super.onInit();
   }

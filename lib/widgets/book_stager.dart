@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
-import 'package:make_links/constants/colors.dart';
 import 'package:make_links/controller/book_controller.dart';
 import 'package:make_links/widgets/bookitem.dart';
 
@@ -34,7 +33,7 @@ class BookStragerGridView extends StatelessWidget {
                   book: bookList[index],
                 ),
             staggeredTileBuilder: (_) => const StaggeredTile.fit(2)),
-        Category(),
+        const Category(),
       ],
     );
   }

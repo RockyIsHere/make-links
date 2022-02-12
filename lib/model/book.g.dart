@@ -30,3 +30,15 @@ Map<String, dynamic> _$BookToJson(Book instance) => <String, dynamic>{
       'content': instance.content,
       'height': instance.height,
     };
+Rating _$RatingFromJson(Map<String, dynamic> json) => Rating(
+      date:
+          json['date'] == null ? null : DateTime.parse(json['date'] as String),
+      rating: (json['rating'] as num?)?.toDouble(),
+      review: json['review'] as String?,
+    );
+
+Map<String, dynamic> _$RatingToJson(Rating instance) => <String, dynamic>{
+      'date': instance.date?.toIso8601String(),
+      'rating': instance.rating,
+      'review': instance.review,
+    };

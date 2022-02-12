@@ -20,7 +20,6 @@ class BookController extends GetxController {
         .toList();
     books.clear();
     books.addAll(booksList);
-    print(books.length);
   }
 
   @override

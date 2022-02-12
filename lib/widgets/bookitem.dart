@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:make_links/constants/decoration.dart';
 import 'package:make_links/model/book.dart';
 import 'package:make_links/screens/details/details.dart';
@@ -12,8 +12,7 @@ class BookItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => DetailPage(book))),
+      onTap: () => Get.to(() => DetailPage(book)),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         decoration: kDecoration1,
