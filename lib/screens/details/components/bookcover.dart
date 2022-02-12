@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:make_links/constants/colors.dart';
 import 'package:make_links/model/book.dart';
@@ -30,11 +31,14 @@ class BookCover extends StatelessWidget {
                 topLeft: Radius.circular(50),
                 bottomLeft: Radius.circular(50),
               ),
-              child: Hero(
-                tag: 'rocky',
-                child: Image.network(
-                  book!.imgUrl!,
-                  fit: BoxFit.cover,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: CachedNetworkImage(
+                  imageUrl: book!.imgUrl!,
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  fit: BoxFit.fitHeight,
                 ),
               ),
             ),
@@ -64,6 +68,7 @@ class BookCover extends StatelessWidget {
                   color: kFont,
                 ),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: const [
                     Icon(
                       Icons.save_alt_rounded,

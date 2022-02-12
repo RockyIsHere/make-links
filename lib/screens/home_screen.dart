@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:make_links/controller/book_controller.dart';
 import 'package:make_links/controller/user_controller.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -18,7 +17,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           ...List.generate(
               users.length,
-              (index) => UserCard(
+              (index) => const UserCard(
                     name: 'rocky',
                   )),
         ],
@@ -37,10 +36,10 @@ class UserCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
       child: Row(
         children: [
-          CircleAvatar(
+          const CircleAvatar(
               backgroundImage: AssetImage('assets/images/chat-2389223.png'),
               radius: 35),
-          SizedBox(
+          const SizedBox(
             width: 12,
           ),
           Column(

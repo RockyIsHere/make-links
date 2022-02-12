@@ -10,57 +10,58 @@ class BookDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              book.type!.toUpperCase(),
-              style: const TextStyle(
-                color: Colors.deepOrange,
-                fontWeight: FontWeight.bold,
-              ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            book.type!.toUpperCase(),
+            style: const TextStyle(
+              color: Colors.deepOrange,
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(height: 10),
-            Text(
-              book.name ?? '',
-              style: const TextStyle(
-                fontSize: 24,
-                color: kFont,
-                height: 1.2,
-              ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            book.name ?? '',
+            style: const TextStyle(
+              fontSize: 24,
+              color: kFont,
+              height: 1.2,
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      const TextSpan(
-                        text: 'Published from ',
-                        style: TextStyle(
-                          color: Colors.black54,
-                        ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text.rich(
+                TextSpan(
+                  children: [
+                    const TextSpan(
+                      text: 'Published from ',
+                      style: TextStyle(
+                        color: Colors.black54,
                       ),
-                      TextSpan(
-                        text: book.publisher,
-                        style: const TextStyle(
-                            color: kFont, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
+                    ),
+                    TextSpan(
+                      text: book.publisher,
+                      style: const TextStyle(
+                          color: kFont, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
-                Text(
-                  DateFormat.yMMMEd().format(book.date!),
-                  style: const TextStyle(color: Colors.black54),
-                ),
-              ],
-            ),
-          ],
-        ));
+              ),
+              Text(
+                DateFormat.yMMMEd().format(book.date!),
+                style: const TextStyle(color: Colors.black54),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
 

@@ -59,7 +59,6 @@ class BookReview extends StatelessWidget {
       Colors.amber,
       Colors.amber,
       Colors.amber,
-      Colors.amber,
       Colors.grey.withOpacity(0.3),
     ];
     return Row(

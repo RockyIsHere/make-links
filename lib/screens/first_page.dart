@@ -13,9 +13,9 @@ class FirstPage extends StatelessWidget {
       body: Center(
         child: IconButton(
             onPressed: () {
-              Get.to(() => HomePage());
+              Get.to(() => const HomePage());
             },
-            icon: Icon(Icons.arrow_forward_ios)),
+            icon: const Icon(Icons.arrow_forward_ios)),
       ),
     );
   }
