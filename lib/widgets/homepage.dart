@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
   final pageController = PageController();
   List<Widget> screens = [
     const Home(),
-    CreatorSection(),
+    const CreatorSection(),
     Container(),
     Container(),
   ];

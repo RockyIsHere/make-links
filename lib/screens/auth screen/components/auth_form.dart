@@ -130,7 +130,7 @@
 //                           },
 //                           child: Text(_isLogin
 //                               ? 'Create new account'
-//                               : 'Already have an account')),
+//                               : 'Already have an account'),),
 //                     ],
 //                   ),
 //                 ],

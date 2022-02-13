@@ -6,6 +6,7 @@ import 'package:make_links/controller/book_controller.dart';
 import 'package:make_links/controller/global_controller.dart';
 import 'package:make_links/model/book.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:make_links/widgets/button.dart';
 import 'components/bookcover.dart';
 import 'components/bookdetails.dart';
 import 'components/bookreview.dart';
@@ -189,32 +190,19 @@ class RatingWindow extends StatelessWidget {
                   const SizedBox(
                     height: 8,
                   ),
-                  Container(
-                    height: 50,
-                    width: 140,
-                    decoration: kDecoration1.copyWith(
-                      color: globalController.hasRatingDone.value
-                          ? Colors.deepOrangeAccent
-                          : Colors.white,
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        bookController.submitRating(
-                            bookId: book.id!, review: _review.text);
-                        Get.back();
-                      },
-                      child: Center(
-                        child: Text(
-                          'Submit',
-                          style: TextStyle(
-                              color: !globalController.hasRatingDone.value
-                                  ? Colors.deepOrangeAccent
-                                  : Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
+                  Button(
+                    name: 'Submit',
+                    color: !globalController.hasRatingDone.value
+                        ? Colors.deepOrangeAccent
+                        : Colors.white,
+                    backgroundColor: globalController.hasRatingDone.value
+                        ? Colors.deepOrangeAccent
+                        : Colors.white,
+                    onTap: () {
+                      bookController.submitRating(
+                          bookId: book.id!, review: _review.text);
+                      Get.back();
+                    },
                   )
                 ],
               ),
