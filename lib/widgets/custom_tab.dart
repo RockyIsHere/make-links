@@ -5,7 +5,7 @@ class CustomTab extends StatelessWidget {
   final int selected;
   final Function callback;
   CustomTab(this.selected, this.callback, {Key? key}) : super(key: key);
-  final tabs = ['Latest', 'Genre'];
+  final tabs = ['Latest', 'Category'];
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;

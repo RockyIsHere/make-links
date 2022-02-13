@@ -4,6 +4,7 @@ part 'book.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Book {
+  String? id;
   String? type;
   String? name;
   String? publisher;
@@ -14,16 +15,22 @@ class Book {
   String? content;
   double? height;
 
-  Book(
-      {this.type,
-      this.name,
-      this.publisher,
-      this.date,
-      this.imgUrl,
-      this.score,
-      this.rating,
-      this.content,
-      this.height});
+  @JsonKey(ignore: true)
+  DocumentReference? reference;
+
+  Book({
+    this.id,
+    this.type,
+    this.name,
+    this.publisher,
+    this.date,
+    this.imgUrl,
+    this.score,
+    this.rating,
+    this.content,
+    this.height,
+    this.reference,
+  });
 
   factory Book.fromJson(Map<String, dynamic> json) => _$BookFromJson(json);
 
@@ -31,8 +38,22 @@ class Book {
 
   static fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     final book = Book.fromJson(snapshot.data() as Map<String, dynamic>);
+    book.reference = snapshot.reference;
+    book.id = snapshot.reference.id;
     return book;
   }
+}
+
+@JsonSerializable(explicitToJson: true)
+class Rating {
+  DateTime? date;
+  double? rating;
+  String? review;
+
+  Rating({this.date, this.rating, this.review});
+
+  factory Rating.fromJson(Map<String, dynamic> json) => _$RatingFromJson(json);
+  Map<String, dynamic> toJson() => _$RatingToJson(this);
 }
 
 List<Book> books = [

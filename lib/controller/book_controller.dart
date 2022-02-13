@@ -10,6 +10,7 @@ class BookController extends GetxController {
           );
 
   final books = <Book>[].obs;
+  final ratingVal = 0.0.obs;
 
   Future<void> getBooks() async {
     var querySnapshot = await booksRef.get();
@@ -20,6 +21,17 @@ class BookController extends GetxController {
         .toList();
     books.clear();
     books.addAll(booksList);
+  }
+
+  Future<void> submitRating(
+      {required String bookId, required String review}) async {
+    var rating =
+        Rating(date: DateTime.now(), rating: ratingVal.value, review: review);
+    FirebaseFirestore.instance
+        .collection('books')
+        .doc(bookId)
+        .collection('ratings')
+        .add(rating.toJson());
   }
 
   @override

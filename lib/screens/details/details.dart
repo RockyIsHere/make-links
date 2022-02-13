@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:make_links/constants/colors.dart';
 import 'package:make_links/constants/decoration.dart';
+import 'package:make_links/controller/book_controller.dart';
+import 'package:make_links/controller/global_controller.dart';
 import 'package:make_links/model/book.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'components/bookcover.dart';
@@ -10,8 +12,8 @@ import 'components/bookreview.dart';
 
 class DetailPage extends StatelessWidget {
   final Book book;
-  const DetailPage(this.book, {Key? key}) : super(key: key);
-
+  DetailPage(this.book, {Key? key}) : super(key: key);
+  final GlobalController globalController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,85 +47,14 @@ class DetailPage extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
+                      globalController.hasRatingDone.value = false;
                       Get.bottomSheet(
-                          SizedBox(
-                            height: 320,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 15),
-                              child: Column(
-                                children: [
-                                  const Text(
-                                    'Please Rate and Review ',
-                                    style: TextStyle(
-                                      color: kFont,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 0.5,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  RatingBar.builder(
-                                    minRating: 1,
-                                    itemSize: 40,
-                                    itemPadding: const EdgeInsets.symmetric(
-                                        horizontal: 4),
-                                    itemBuilder:
-                                        (BuildContext context, int index) =>
-                                            const Icon(
-                                      Icons.star,
-                                      color: Colors.deepOrangeAccent,
-                                    ),
-                                    onRatingUpdate: (double value) {},
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Container(
-                                      height: 130,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        border: Border.all(
-                                            width: 1.8,
-                                            color: Colors.deepOrangeAccent),
-                                      ),
-                                      child: const Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 12),
-                                        child: TextField(
-                                          style: TextStyle(fontSize: 18),
-                                          maxLines: 8,
-                                          decoration: InputDecoration(
-                                            border: InputBorder.none,
-                                            hintText:
-                                                'Please give us your valuable review',
-                                            hintStyle: TextStyle(fontSize: 16),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 60,
-                                    width: 140,
-                                    decoration: kDecoration1.copyWith(
-                                      color: Colors.deepOrangeAccent,
-                                    ),
-                                    child: const Center(
-                                      child: Text(
-                                        'Submit',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          backgroundColor: Colors.white);
+                        RatingWindow(
+                          book: book,
+                        ),
+                        isDismissible: false,
+                        backgroundColor: Colors.white,
+                      );
                     },
                     child: Container(
                       height: 40,
@@ -179,6 +110,118 @@ class DetailPage extends StatelessWidget {
           iconSize: 50,
         )
       ],
+    );
+  }
+}
+
+class RatingWindow extends StatelessWidget {
+  final Book book;
+  RatingWindow({Key? key, required this.book}) : super(key: key);
+
+  final TextEditingController _review = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return Obx(
+      () {
+        final GlobalController globalController = Get.find();
+        final BookController bookController = Get.find();
+        return SingleChildScrollView(
+          child: Container(
+            constraints: const BoxConstraints(
+              maxHeight: 500,
+            ),
+            height: 320,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              child: Column(
+                children: [
+                  const Text(
+                    'Please Rate and Review ',
+                    style: TextStyle(
+                      color: kFont,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  RatingBar.builder(
+                    minRating: 1,
+                    itemSize: 40,
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 4),
+                    itemBuilder: (BuildContext context, int index) =>
+                        const Icon(
+                      Icons.star,
+                      color: Colors.deepOrangeAccent,
+                    ),
+                    onRatingUpdate: (double value) {
+                      globalController.hasRatingDone.value = true;
+                      bookController.ratingVal.value = value;
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Container(
+                      height: 130,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                            width: 1.8, color: Colors.deepOrangeAccent),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: TextField(
+                          controller: _review,
+                          style: const TextStyle(fontSize: 18),
+                          maxLines: 8,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText:
+                                'Please give us your valuable review(optional)',
+                            hintStyle: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Container(
+                    height: 50,
+                    width: 140,
+                    decoration: kDecoration1.copyWith(
+                      color: globalController.hasRatingDone.value
+                          ? Colors.deepOrangeAccent
+                          : Colors.white,
+                    ),
+                    child: InkWell(
+                      onTap: () {
+                        bookController.submitRating(
+                            bookId: book.id!, review: _review.text);
+                        Get.back();
+                      },
+                      child: Center(
+                        child: Text(
+                          'Submit',
+                          style: TextStyle(
+                              color: !globalController.hasRatingDone.value
+                                  ? Colors.deepOrangeAccent
+                                  : Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
