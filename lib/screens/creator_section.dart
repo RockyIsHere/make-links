@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:make_links/controller/auth_controller.dart';
+import 'package:make_links/controller/book_controller.dart';
 import 'package:make_links/widgets/button.dart';
 import '../constants/colors.dart';
 
@@ -17,6 +18,7 @@ class CreatorSection extends StatefulWidget {
 }
 
 class _CreatorSectionState extends State<CreatorSection> {
+  final BookController bookController = Get.find();
   final TextEditingController name = TextEditingController();
   final TextEditingController publisher = TextEditingController();
   final TextEditingController storyType = TextEditingController();
@@ -28,6 +30,8 @@ class _CreatorSectionState extends State<CreatorSection> {
   String? imageName;
   final _formKey = GlobalKey<FormState>();
   var isLoading = false;
+  var uploadDone = false;
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -125,11 +129,12 @@ class _CreatorSectionState extends State<CreatorSection> {
                             controller: height,
                             name: 'Approximate image height',
                             validator: (value) {
-                              if (value == null) {
+                              if (value == null || value == '') {
                                 return 'This field should not be empty';
                               }
                               return null;
                             },
+                            keyboardType: TextInputType.number,
                           )
                         ],
                       ),
@@ -150,7 +155,7 @@ class _CreatorSectionState extends State<CreatorSection> {
               height: 70,
               maxLine: 3,
               validator: (value) {
-                if (value == null) {
+                if (value == null || value == '') {
                   return 'This field should not be empty';
                 }
                 return null;
@@ -163,7 +168,7 @@ class _CreatorSectionState extends State<CreatorSection> {
               name: 'Publisher',
               controller: publisher,
               validator: (value) {
-                if (value == null) {
+                if (value == null || value == '') {
                   return 'This field should not be empty';
                 }
                 return null;
@@ -176,7 +181,7 @@ class _CreatorSectionState extends State<CreatorSection> {
               name: 'Type',
               controller: storyType,
               validator: (value) {
-                if (value == null) {
+                if (value == null || value == '') {
                   return 'This field should not be empty';
                 }
                 return null;
@@ -191,7 +196,7 @@ class _CreatorSectionState extends State<CreatorSection> {
               height: 350,
               maxLine: 1000,
               validator: (value) {
-                if (value == null) {
+                if (value == null || value == '') {
                   return 'This field should not be empty';
                 }
                 return null;
@@ -206,7 +211,9 @@ class _CreatorSectionState extends State<CreatorSection> {
                 Expanded(
                     child: Button(
                   onTap: () {
-                    if (_formKey.currentState!.validate()) {
+                    if (_formKey.currentState!.validate() &&
+                        imageFile != null &&
+                        !uploadDone) {
                       if (FirebaseAuth.instance.currentUser == null) {
                         Get.bottomSheet(
                           const PhoneVerificationWindow(),
@@ -220,9 +227,15 @@ class _CreatorSectionState extends State<CreatorSection> {
                       }
                     }
                   },
-                  color: Colors.deepOrangeAccent,
-                  name: !isLoading ? 'Upload' : 'Loading...',
-                  backgroundColor: Colors.white,
+                  color: imageFile != null
+                      ? (uploadDone ? Colors.black26 : Colors.white)
+                      : Colors.deepOrangeAccent,
+                  name: 'Upload',
+                  backgroundColor: imageFile == null
+                      ? Colors.white
+                      : (uploadDone
+                          ? Colors.grey.shade200
+                          : Colors.deepOrangeAccent),
                   isTrue: !isLoading,
                 )),
                 const SizedBox(
@@ -230,10 +243,30 @@ class _CreatorSectionState extends State<CreatorSection> {
                 ),
                 Expanded(
                   child: Button(
-                    onTap: () {},
-                    color: Colors.deepOrangeAccent,
+                    onTap: () {
+                      bookController.uploadStory(
+                        name: name.text,
+                        imgUrl: imageUrl!,
+                        content: story.text,
+                        height: height.text,
+                        publisher: publisher.text,
+                        type: storyType.text,
+                      );
+                      name.clear();
+                      imageUrl = '';
+                      story.clear();
+                      height.clear();
+                      publisher.clear();
+                      storyType.clear();
+                      setState(() {
+                        uploadDone = false;
+                      });
+                      imageFile = null;
+                    },
+                    color: uploadDone ? Colors.white : Colors.deepOrangeAccent,
                     name: 'Submit',
-                    backgroundColor: Colors.white,
+                    backgroundColor:
+                        !uploadDone ? Colors.white : Colors.deepOrangeAccent,
                   ),
                 ),
               ],
@@ -271,6 +304,10 @@ class _CreatorSectionState extends State<CreatorSection> {
       });
     });
     imageUrl = await ref.getDownloadURL();
+    setState(() {
+      uploadDone = true;
+    });
+    print(imageUrl);
   }
 }
 
@@ -280,6 +317,7 @@ class CreatorText extends StatelessWidget {
   final double height;
   final int maxLine;
   final String? Function(String?)? validator;
+  final TextInputType keyboardType;
   const CreatorText({
     Key? key,
     required this.controller,
@@ -287,6 +325,7 @@ class CreatorText extends StatelessWidget {
     this.height = 50,
     this.maxLine = 1,
     this.validator,
+    this.keyboardType = TextInputType.name,
   }) : super(key: key);
 
   @override
@@ -304,6 +343,7 @@ class CreatorText extends StatelessWidget {
           controller: controller,
           maxLines: maxLine,
           style: const TextStyle(fontSize: 18),
+          keyboardType: keyboardType,
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: name,

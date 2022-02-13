@@ -44,7 +44,7 @@ class Button extends StatelessWidget {
                   )
                 : const Center(
                     child: CircularProgressIndicator(
-                      color: Colors.deepOrangeAccent,
+                      color: Colors.white,
                     ),
                   ),
           ),

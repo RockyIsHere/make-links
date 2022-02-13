@@ -34,6 +34,27 @@ class BookController extends GetxController {
         .add(rating.toJson());
   }
 
+  uploadStory({
+    required String name,
+    required String imgUrl,
+    required String content,
+    required String height,
+    required String publisher,
+    required String type,
+  }) {
+    var book = Book();
+    book.name = name;
+    book.imgUrl = imgUrl;
+    book.content = content;
+    book.date = DateTime.now();
+    book.height = double.parse(height);
+    book.publisher = publisher;
+    book.rating = 0;
+    book.score = 0.0;
+    book.type = type;
+    FirebaseFirestore.instance.collection('books').add(book.toJson());
+  }
+
   @override
   void onInit() async {
     await getBooks();
